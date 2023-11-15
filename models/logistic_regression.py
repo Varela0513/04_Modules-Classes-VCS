@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class LogisticRegression:
     def __init__(self, some, learning_rate=0.0001, num_iterations=1000):
         self.some = some
@@ -9,7 +8,8 @@ class LogisticRegression:
         self.weights = None
         self.bias = None
 
-    def sigmoid(self, x):
+    @staticmethod
+    def sigmoid(x):
         return 1 / (1 + np.exp(-x))
 
     def fit(self, X, y):
