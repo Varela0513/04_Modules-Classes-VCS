@@ -1,26 +1,31 @@
 # 04_Modules-Classes-VCS
-Modules, clases and VCS with Object Oriented Programming
 
-Abrir el el archvio de python "main" en dl_trading y correr el códgio.
+## Modules, Classes, and Version Control with Object-Oriented Programming
 
-Dependencies
-Ensure you have the following dependencies installed:
+Welcome to the "Modules-Classes-VCS" project! This comprehensive initiative delves into the effective utilization of Object-Oriented Programming (OOP) principles through the implementation of modules, classes, and version control. The primary objective revolves around the optimization of trading strategies, encompassing methodologies such as Technical Analysis, Machine Learning, and Deep Learning.
 
-numpy==1.22.3
+## Project Structure
 
-pandas
+This project adheres to a well-organized directory structure, facilitating clarity and modularity:
 
-scikit-learn
+- **dl_trading:** Houses scripts related to Deep Learning models for trading.
+  - **models:** Contains implementations of Deep Learning models (e.g., linear regression, logistic regression).
+- **ml_trading:** Incorporates scripts pertinent to Machine Learning models for trading.
+  - **models:** Stores Machine Learning model implementations.
+- **technicalanalysis:** Encompasses scripts pertaining to technical analysis.
+  - **models:** Defines classes for trading orders and other relevant functionalities.
+- **files:** Stores the datasets (`aapl_5m_train.csv`, `aapl_5m_validation.csv`) utilized in the project.
+- **README.md:** This document offers an overview of the project, objectives, and instructions.
 
-xgboost
+## Instructions
 
-matplotlib
+To commence your exploration of the project:
 
-scipy
+1. Open the Python file "main" in the `dl_trading` directory and execute the code.
+2. Ensure the requisite dependencies are installed. You can achieve this by employing the following command:
 
-tensorflow
+   ```bash
+   pip install -r requirements.txt
+## Acknowledgments
 
-keras-tuner
-
-# Acknowledgments
-We would like to express our sincere gratitude to the professor that guided us through this project.
+We extend our sincere gratitude to the guiding professor, whose expertise has proven invaluable in steering this project. Their mentorship has significantly influenced the development and analysis of the presented trading strategies.
