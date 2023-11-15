@@ -68,7 +68,7 @@ model_mlp.fit(X_tf, Y_tf, epochs=10, batch_size=10)
 
 
 # 4. Optimization
-def optimize_params(x: np.array) -> float:
+def optimize_params(x: np.ndarray) -> float:
     gamma, reg_alpha = x  # Unpack parameters
     n_estimators = 1
     model_ = xgboost.XGBClassifier(n_estimators=n_estimators,
@@ -81,8 +81,9 @@ def optimize_params(x: np.array) -> float:
     return -acc
 
 
+# Convert x0 to a NumPy array
+x0 = np.array([0, 1e-3])
 bnds = ((0, 10), (1e-4, 10))
-x0 = [0, 1e-3]
 res = minimize(optimize_params, bounds=bnds, x0=x0, method="Nelder-Mead", tol=1e-10)
 print(res)
 print(res.x)
@@ -140,14 +141,13 @@ y_hat_svc = svc.predict(X)
 y_hat_xgb = y_hat_boost  # Ya tienes esta variable definida
 
 # Predicciones del Modelo MLP
-y_hat_mlp = (model_mlp.predict(X_tf) > 0.5).astype(int).flatten()
+y_hat_mlp1 = (model_mlp.predict(X_tf) > 0.5).astype(int).flatten()
 
 # Combinar predicciones de todos los modelos
-combined_predictions_dl = [combine_predictions_dl([y_hat_lr[i], y_hat_svc[i], y_hat_xgb[i], y_hat_mlp[i]]) for i in
-                           range(len(y_hat_lr))]
-
-# Combinar predicciones de todos los modelos
-combined_predictions_dl = [combine_predictions_dl([y_hat_lr[i], y_hat_svc[i], y_hat_xgb[i], y_hat_mlp[i]]) for i in
+combined_predictions_dl = [combine_predictions_dl([y_hat_lr[i],
+                                                   y_hat_svc[i],
+                                                   y_hat_xgb[i],
+                                                   y_hat_mlp[i]]) for i in
                            range(len(y_hat_lr))]
 
 # 6. Backtesting
@@ -197,13 +197,6 @@ X_val = validation_data[['MA5', 'MA10']]
 y_hat_val_lr = log_reg.predict(X_val)
 y_hat_val_svc = svc.predict(X_val)
 y_hat_val_xgb = opt_model.predict(X_val)
-
-
-# Define la función para combinar predicciones si aún no está definida
-def combine_predictions_dl(preds):
-    combined = sum(preds)
-    return 1 if combined >= len(preds) / 2 else 0
-
 
 # Combine predictions
 combined_predictions_val = [combine_predictions_dl([y_hat_val_lr[i], y_hat_val_svc[i], y_hat_val_xgb[i]]) for i in
