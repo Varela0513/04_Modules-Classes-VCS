@@ -1,25 +1,21 @@
-import pandas as pd
-import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-import xgboost as xgboost
-from sklearn.metrics import accuracy_score, confusion_matrix
-from scipy.optimize import minimize
-import matplotlib.pyplot as plt
-import tensorflow as tf
 import keras_tuner as kt
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+import xgboost as xgboost
+from scipy.optimize import minimize
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.svm import SVC
 
-
-
-from models.linear_regression import LinearRegression
 from models.logistic_regression import LogisticRegression
 
-#1. Data Loading
+# 1. Data Loading
 # Load the datasets
 train_data = pd.read_csv('aapl_5m_train.csv')
 validation_data = pd.read_csv('aapl_5m_validation.csv')
 
-#2. Feature Engineering
+# 2. Feature Engineering
 # Calculate moving averages
 train_data['MA5'] = train_data['Close'].rolling(window=5).mean()
 train_data['MA10'] = train_data['Close'].rolling(window=10).mean()
@@ -34,7 +30,7 @@ train_data.dropna(inplace=True)
 X = train_data[['MA5', 'MA10']]
 Y = train_data['Target']
 
-#3. Modeling
+# 3. Modeling
 # Logistic Regression
 log_reg = LogisticRegression()
 log_reg.fit(X, Y)
@@ -52,7 +48,6 @@ y_hat_boost = boosted_model.predict(X)
 print(confusion_matrix(Y, y_hat_boost))
 print(confusion_matrix(Y, y_hat))
 print(accuracy_score(Y, y_hat_boost))
-
 
 # Adaptación de datos para TensorFlow
 X_tf = np.array(X)
@@ -126,10 +121,12 @@ tuner = kt.RandomSearch(
 
 tuner.search(X_tf, Y_tf, epochs=10, validation_split=0.2)
 
-#5. Combination of Models
+
+# 5. Combination of Models
 def combine_predictions_dl(preds):
     combined = sum(preds)
     return 1 if combined >= len(preds) / 2 else 0
+
 
 # Predicciones de modelos de Deep Learning
 y_hat_mlp = (model_mlp.predict(X_tf) > 0.5).astype(int).flatten()
@@ -146,13 +143,14 @@ y_hat_xgb = y_hat_boost  # Ya tienes esta variable definida
 y_hat_mlp = (model_mlp.predict(X_tf) > 0.5).astype(int).flatten()
 
 # Combinar predicciones de todos los modelos
-combined_predictions_dl = [combine_predictions_dl([y_hat_lr[i], y_hat_svc[i], y_hat_xgb[i], y_hat_mlp[i]]) for i in range(len(y_hat_lr))]
-
+combined_predictions_dl = [combine_predictions_dl([y_hat_lr[i], y_hat_svc[i], y_hat_xgb[i], y_hat_mlp[i]]) for i in
+                           range(len(y_hat_lr))]
 
 # Combinar predicciones de todos los modelos
-combined_predictions_dl = [combine_predictions_dl([y_hat_lr[i], y_hat_svc[i], y_hat_xgb[i], y_hat_mlp[i]]) for i in range(len(y_hat_lr))]
+combined_predictions_dl = [combine_predictions_dl([y_hat_lr[i], y_hat_svc[i], y_hat_xgb[i], y_hat_mlp[i]]) for i in
+                           range(len(y_hat_lr))]
 
-#6. Backtesting
+# 6. Backtesting
 initial_cash = 1000000  # Starting cash
 cash = initial_cash
 stock = 0
@@ -188,7 +186,7 @@ for i in range(len(train_data) - 1):
 
     portfolio_values.append(cash + stock * current_price)
 
-#7. Strategy Selection & Validation
+# 7. Strategy Selection & Validation
 # Feature engineering for validation data
 validation_data['MA5'] = validation_data['Close'].rolling(window=5).mean()
 validation_data['MA10'] = validation_data['Close'].rolling(window=10).mean()
@@ -200,13 +198,16 @@ y_hat_val_lr = log_reg.predict(X_val)
 y_hat_val_svc = svc.predict(X_val)
 y_hat_val_xgb = opt_model.predict(X_val)
 
+
 # Define la función para combinar predicciones si aún no está definida
 def combine_predictions_dl(preds):
     combined = sum(preds)
     return 1 if combined >= len(preds) / 2 else 0
 
+
 # Combine predictions
-combined_predictions_val = [combine_predictions_dl([y_hat_val_lr[i], y_hat_val_svc[i], y_hat_val_xgb[i]]) for i in range(len(y_hat_val_lr))]
+combined_predictions_val = [combine_predictions_dl([y_hat_val_lr[i], y_hat_val_svc[i], y_hat_val_xgb[i]]) for i in
+                            range(len(y_hat_val_lr))]
 
 # Resto del código de backtesting en los datos de validación
 cash = initial_cash
@@ -234,7 +235,7 @@ for i in range(len(validation_data) - 1):
 
 portfolio_values_val.append(cash + stock * validation_data['Close'].iloc[-1])
 
-#8. Results & Conclusions
+# 8. Results & Conclusions
 # Plot portfolio values for training data
 plt.figure(figsize=(14, 7))
 plt.plot(portfolio_values, label="Training Data Portfolio Value")
@@ -251,7 +252,3 @@ print("Longitud de los datos de entrenamiento:", len(train_data))
 print("Longitud de portfolio_values:", len(portfolio_values))
 print("Longitud de los datos de validación:", len(validation_data))
 print("Longitud de portfolio_values_val:", len(portfolio_values_val))
-
-
-
-
