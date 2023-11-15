@@ -4,7 +4,7 @@ from models.linear_regression import LinearRegression
 from models.logistic_regression import LogisticRegression
 
 # Load the dataset 'P1_2.txt'
-linear_data = np.loadtxt('Reg_1.txt', delimiter='\t')
+linear_data = np.loadtxt('../Reg_1.txt', delimiter='\t')
 
 # Split the dataset into features (X) and labels (y)
 X_linear = linear_data[:, :-1]
@@ -38,7 +38,7 @@ print(f"Root Mean Squared Error (RMSE): {linear_rmse:.4f}")
 
 
 # Load the dataset 'Reg_1.txt'
-logistic_data = np.loadtxt('P1_2.txt', delimiter='\t')  # Assuming tab-separated values
+logistic_data = np.loadtxt('../P1_2.txt', delimiter='\t')  # Assuming tab-separated values
 
 # Split the dataset into features (X) and labels (y)
 X = logistic_data[:, :-1]
