@@ -35,8 +35,6 @@ print(f"R2 Score: {linear_r2:.4f}")
 print(f"Mean Squared Error (MSE): {linear_mse:.4f}")
 print(f"Root Mean Squared Error (RMSE): {linear_rmse:.4f}")
 
-
-
 # Load the dataset 'Reg_1.txt'
 logistic_data = np.loadtxt('../P1_2.txt', delimiter='\t')  # Assuming tab-separated values
 
